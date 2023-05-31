@@ -1,0 +1,24 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    tags:
+      application: app-a
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: 'true'
+        requests:
+          root:
+            total: 'true'
+spring:
+  main:
+    allow-circular-references: 'true'
+
+
+logging:
+  pattern:
+    level: trace_id=%X{trace_id} span_id=%mdc{span_id} trace_flags=%mdc{trace_flags} %5p    

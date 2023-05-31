@@ -1,0 +1,3 @@
+#java -javaagent:.\opentelemetry-javaagent-1.25.0.jar -jar .\loki-otel-app-0.0.1-SNAPSHOT.jar
+OTEL_TRACES_EXPORTER=otlp OTEL_RESOURCE_ATTRIBUTES=service.name=app-a,compose_service=app-a OTEL_METRICS_EXPORTER=none OTEL_LOGS_EXPORTER=otlp java -javaagent:./opentelemetry-javaagent-1.25.0.jar -Dserver.port=8081 -jar ./loki-otel-app-0.0.1-SNAPSHOT.jar
+OTEL_TRACES_EXPORTER=otlp OTEL_RESOURCE_ATTRIBUTES=service.name=app-a,compose_service=app-a OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://localhost:4312 OTEL_METRICS_EXPORTER=none OTEL_LOGS_EXPORTER=otlp java -javaagent:./opentelemetry-javaagent-1.25.0.jar -Dserver.port=8081 -jar ./loki-otel-app-0.0.1-SNAPSHOT.jar

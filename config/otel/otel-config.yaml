@@ -1,0 +1,67 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+processors:
+      batch:
+      attributes/renamer:
+        actions:
+          - key: account_id
+            value: ''
+            action: insert  
+      resource:
+        attributes:
+          - key: host.name
+            action: delete  
+          - action: insert
+            key: loki.format
+            value: logfmt  
+      transform/telemetry:
+        log_statements:
+          - context: log
+            statements:
+              - set(attributes["msg"], body)
+              - set(body, ParseJSON("{\"msg\":true}"))
+              - set(body["msg"],attributes)              
+              - set(attributes["account_id"], "456678287") where resource.attributes["os.type"] == "linux"
+              - keep_keys(resource.attributes, ["os.type", "service.name","account_id"])
+              - keep_keys(attributes, ["account_id"])
+        metric_statements:
+          - context: resource
+            statements:
+              - keep_keys(attributes, ["uri","le","application","job","trace_id","span_id"])
+          - context: datapoint
+            statements:
+              - keep_keys(attributes, ["uri","le","application","job","trace_id","span_id"])
+exporters:
+  logging:
+    verbosity: detailed
+  loki:
+    endpoint: "http://10.2.0.172:3100/loki/api/v1/push"
+  otlp/tempo:
+    endpoint: "http://tempo:4317"
+    tls:
+      insecure: true  
+  prometheus:
+    endpoint: 'collector:1234'
+    namespace: test-space
+    send_timestamps: true
+    metric_expiration: 180m
+    resource_to_telemetry_conversion:
+      enabled: true      	
+    enable_open_metrics: true  	
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch,transform/telemetry]
+      exporters: [prometheus]
+    logs:
+      receivers: [otlp]
+      processors: [batch,transform/telemetry,resource,attributes/renamer]
+      exporters: [logging,loki]  
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging,otlp/tempo]	  

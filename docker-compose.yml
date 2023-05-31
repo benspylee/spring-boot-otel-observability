@@ -1,0 +1,89 @@
+version: "3"
+
+networks:
+  loki:
+
+services:
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki.yaml
+    volumes:
+      - ./config/loki/loki.yaml:/etc/loki/loki.yaml
+      - ./data/loki_data:/tmp/loki
+    networks:
+      - loki
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - ./data/grafana_data:/var/lib/grafana  
+    ports:
+      - "3000:3000"
+    networks:
+      - loki
+  tempo:
+    image: grafana/tempo:latest
+    command: [ "-config.file=/etc/tempo.yaml" ,"--auth.enabled=false" ]
+    # command: [ "--target=all", "--storage.trace.backend=local", "--storage.trace.local.path=/tmp/tempo", "--auth.enabled=false" ]
+    volumes:
+      - ./config/tempo/tempo.yaml:/etc/tempo.yaml
+      - ./data/tempo_data:/tmp/tempo
+    ports:
+      - "14268:14268"  # jaeger ingest
+      - "3200:3200"   # tempo
+      - "9095:9095" # tempo grpc   
+      - "4312:4317" # tempo grpc   
+    networks:
+      - loki  
+  collector:
+    image: otel/opentelemetry-collector-contrib:0.72.0
+    volumes:
+      - ./config/otel/otel-config.yaml:/otel-config.yaml
+    command: ["--config=/otel-config.yaml"]
+    ports:
+      - "4317:4317"
+      - "1234:1234"
+    networks:
+      - loki    
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--enable-feature=exemplar-storage'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    networks:
+      - loki  
+  alertmanager:
+      image: prom/alertmanager:latest
+      ports:
+        - 9093:9093
+      volumes:
+        - ./config/alertmanager/alert-mgr-config.yml:/etc/alertmanager/alert-mgr-config.yml
+        - ./data/alertmanager_data:/opt/alertmanager_data
+      restart: always
+      command:
+        - '--config.file=/etc/alertmanager/alert-mgr-config.yml'
+        - '--storage.path=/opt/alertmanager_data'      
+      networks:
+      - loki    
+  app-a:
+    build: ./target_app/
+    environment:
+      - OTEL_SERVICE_NAME=app-a
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://collector:4317
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_LOGS_EXPORTER=otlp
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=app-a,compose_service=app-a
+    ports:
+      - "8081:8080"   
+    networks:
+      - loki     
