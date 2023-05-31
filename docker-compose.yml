@@ -1,7 +1,7 @@
 version: "3"
 
 networks:
-  loki:
+  otel-net:
 
 services:
   loki:
@@ -13,7 +13,7 @@ services:
       - ./config/loki/loki.yaml:/etc/loki/loki.yaml
       - ./data/loki_data:/tmp/loki
     networks:
-      - loki
+      - otel-net
   grafana:
     image: grafana/grafana:latest
     volumes:
@@ -21,7 +21,7 @@ services:
     ports:
       - "3000:3000"
     networks:
-      - loki
+      - otel-net
   tempo:
     image: grafana/tempo:latest
     command: [ "-config.file=/etc/tempo.yaml" ,"--auth.enabled=false" ]
@@ -35,7 +35,7 @@ services:
       - "9095:9095" # tempo grpc   
       - "4312:4317" # tempo grpc   
     networks:
-      - loki  
+      - otel-net  
   collector:
     image: otel/opentelemetry-collector-contrib:0.72.0
     volumes:
@@ -45,7 +45,7 @@ services:
       - "4317:4317"
       - "1234:1234"
     networks:
-      - loki    
+      - otel-net    
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -60,7 +60,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - loki  
+      - otel-net  
   alertmanager:
       image: prom/alertmanager:latest
       ports:
@@ -73,7 +73,7 @@ services:
         - '--config.file=/etc/alertmanager/alert-mgr-config.yml'
         - '--storage.path=/opt/alertmanager_data'      
       networks:
-      - loki    
+      - otel-net    
   app-a:
     build: ./target_app/
     environment:
@@ -86,4 +86,4 @@ services:
     ports:
       - "8081:8080"   
     networks:
-      - loki     
+      - otel-net     
