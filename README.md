@@ -69,7 +69,7 @@ This Spring Boot (Grafana stack/Opentelemetry) project is inspired by [Spring Bo
 
 Grafana provides a great solution, which could observe specific actions in service between traces, metrics, and logs through trace ID and exemplar.
 
-![Observability Correlations](./images/observability-correlations.jpeg)
+![Observability Correlations](./images/observability_correlations.jpg)
 
 Image Source: [Grafana](https://grafana.com/blog/2021/03/31/intro-to-exemplars-which-enable-grafana-tempos-distributed-tracing-at-massive-scale/)
 
