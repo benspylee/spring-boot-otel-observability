@@ -1,7 +1,7 @@
 route:
   group_by: [ alertname ]
   receiver: 'sns' # default receiver
-  repeat_interval: 5m
+  repeat_interval: 2m
 
 
 receivers:
@@ -9,8 +9,8 @@ receivers:
     sns_configs:
       - topic_arn: arn:aws:sns:us-east-1:101981577606:alertmanager-sns-topic
         subject: |-
-          #subject
+            High CPU Usage 
         message: |-
-          Hi, Team cpu usage is high,please look at the system.
+            High CPU Usage in the target machine.Please look into it.
         sigv4:
           region: us-east-1

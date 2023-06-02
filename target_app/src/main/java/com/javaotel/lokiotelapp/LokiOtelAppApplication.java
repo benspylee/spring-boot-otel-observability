@@ -69,6 +69,21 @@ public class LokiOtelAppApplication {
         return "random_sleep";
     }
 
+    @GetMapping("/chain")
+    public String chain(@RequestParam(value = "name", defaultValue = "World") String name) throws InterruptedException, IOException {
+        String TARGET_ONE_HOST = System.getenv().getOrDefault("TARGET_ONE_HOST", "localhost");
+        String TARGET_TWO_HOST = System.getenv().getOrDefault("TARGET_TWO_HOST", "localhost");
+        logger.debug("chain is starting");
+        Request.Get("http://localhost:8080/")
+                .execute().returnContent();
+        Request.Get(String.format("http://%s:8080/io_task", TARGET_ONE_HOST))
+                .execute().returnContent();
+        Request.Get(String.format("http://%s:8080/cpu_task", TARGET_TWO_HOST))
+                .execute().returnContent();
+        logger.debug("chain is finished");
+        return "chain";
+    }
+
     
     @GetMapping("/error_test")
     public String error_test(@RequestParam(value = "name", defaultValue = "World") String name) throws Exception {

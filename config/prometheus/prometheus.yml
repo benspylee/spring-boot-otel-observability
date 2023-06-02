@@ -26,8 +26,8 @@ scrape_configs:
     # scheme defaults to 'http'.
     metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ["10.2.0.172:8081"]
+      - targets: ["app-a:8081"]
   - job_name: "app-b"
     # metrics_path: '/actuator/prometheus'
     static_configs:
-      - targets: ["10.2.0.172:1234"]
+      - targets: ["collector:1234"]

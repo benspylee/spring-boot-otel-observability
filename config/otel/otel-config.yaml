@@ -10,13 +10,16 @@ processors:
           - key: account_id
             value: ''
             action: insert  
+          - action: insert
+            key: loki.format
+            value: raw   
       resource:
         attributes:
           - key: host.name
             action: delete  
           - action: insert
             key: loki.format
-            value: logfmt  
+            value: raw  
       transform/telemetry:
         log_statements:
           - context: log
@@ -59,7 +62,7 @@ service:
       exporters: [prometheus]
     logs:
       receivers: [otlp]
-      processors: [batch,transform/telemetry,resource,attributes/renamer]
+      processors: [batch] #transform/telemetry,,attributes/renamer ,resource
       exporters: [logging,loki]  
     traces:
       receivers: [otlp]
