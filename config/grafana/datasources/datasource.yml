@@ -66,7 +66,7 @@ datasources:
       - datasourceUid: f30c97cf-42c0-4c2c-866c-6a0f408c8b68
         matcherRegex: '"traceid"[:]"(\w+)"'
         name: TraceID
-        url: "${__value.raw}"
+        url: $${__value.raw}
     readOnly: false
   - uid: c41fbd6d-792c-4968-8694-70222febcc5c
     orgId: 1
