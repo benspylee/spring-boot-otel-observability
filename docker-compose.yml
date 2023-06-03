@@ -18,6 +18,9 @@ services:
     image: grafana/grafana:latest
     volumes:
       - ./data/grafana_data:/var/lib/grafana  
+      - ./config/grafana/datasources/:/etc/grafana/provisioning/datasources
+      - ./config/grafana/dashboards/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./config/grafana/dashboards:/etc/grafana/dashboards
     ports:
       - "3000:3000"
     networks:

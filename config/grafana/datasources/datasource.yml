@@ -1,0 +1,85 @@
+# config file version
+apiVersion: 1
+
+# list of datasources that should be deleted from the database
+deleteDatasources:
+  - name: Prometheus
+    orgId: 1
+
+# list of datasources to insert/update depending
+# what's available in the database
+datasources:
+  # <string, required> name of the datasource. Required
+  - uid: b9dbab95-0ce1-48a5-be76-b79a9e8539b5
+    orgId: 1
+    name: Prometheus
+    type: prometheus
+    typeName: Prometheus
+    typeLogoUrl: public/app/plugins/datasource/prometheus/img/prometheus_logo.svg
+    access: proxy
+    url: http://prometheus:9090
+    user: ''
+    database: ''
+    basicAuth: false
+    isDefault: true
+    jsonData:
+      exemplarTraceIdDestinations:
+      - datasourceUid: f30c97cf-42c0-4c2c-866c-6a0f408c8b68
+        name: trace_id
+      httpMethod: POST
+    readOnly: false
+  - uid: f30c97cf-42c0-4c2c-866c-6a0f408c8b68
+    orgId: 1
+    name: Tempo
+    type: tempo
+    typeName: Tempo
+    typeLogoUrl: public/app/plugins/datasource/tempo/img/tempo_logo.svg
+    access: proxy
+    url: http://tempo:3200
+    user: ''
+    database: ''
+    basicAuth: false
+    isDefault: false
+    jsonData:
+      tracesToLogsV2:
+        customQuery: false
+        datasourceUid: c616c72d-2923-44ee-a6cc-f001dc9416f1
+        filterByTraceID: true
+        tags:
+        - key: compose_service
+          value: job
+    readOnly: false
+  - uid: c616c72d-2923-44ee-a6cc-f001dc9416f1
+    orgId: 1
+    name: Loki
+    type: loki
+    typeName: Loki
+    typeLogoUrl: public/app/plugins/datasource/loki/img/loki_icon.svg
+    access: proxy
+    url: http://loki:3100
+    user: ''
+    database: ''
+    basicAuth: false
+    isDefault: false
+    jsonData:
+      derivedFields:
+      - datasourceUid: f30c97cf-42c0-4c2c-866c-6a0f408c8b68
+        matcherRegex: '"traceid"[:]"(\w+)"'
+        name: TraceID
+        url: "${__value.raw}"
+    readOnly: false
+  - uid: c41fbd6d-792c-4968-8694-70222febcc5c
+    orgId: 1
+    name: Alertmanager
+    type: alertmanager
+    typeName: Alertmanager
+    typeLogoUrl: public/app/plugins/datasource/alertmanager/img/logo.svg
+    access: proxy
+    url: http://alertmanager:9093
+    user: ''
+    database: ''
+    basicAuth: false
+    isDefault: false
+    jsonData:
+      implementation: prometheus
+    readOnly: false  

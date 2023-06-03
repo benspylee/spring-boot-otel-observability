@@ -1,0 +1,29 @@
+{
+  "id": 3,
+  "uid": "f30c97cf-42c0-4c2c-866c-6a0f408c8b68",
+  "orgId": 1,
+  "name": "Tempo",
+  "type": "tempo",
+  "typeName": "Tempo",
+  "typeLogoUrl": "public/app/plugins/datasource/tempo/img/tempo_logo.svg",
+  "access": "proxy",
+  "url": "http://tempo:3200",
+  "user": "",
+  "database": "",
+  "basicAuth": false,
+  "isDefault": false,
+  "jsonData": {
+    "tracesToLogsV2": {
+      "customQuery": false,
+      "datasourceUid": "c616c72d-2923-44ee-a6cc-f001dc9416f1",
+      "filterByTraceID": true,
+      "tags": [
+        {
+          "key": "compose_service",
+          "value": "job"
+        }
+      ]
+    }
+  },
+  "readOnly": false
+}

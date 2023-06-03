@@ -1,0 +1,25 @@
+{
+  "id": 1,
+  "uid": "b9dbab95-0ce1-48a5-be76-b79a9e8539b5",
+  "orgId": 1,
+  "name": "Prometheus",
+  "type": "prometheus",
+  "typeName": "Prometheus",
+  "typeLogoUrl": "public/app/plugins/datasource/prometheus/img/prometheus_logo.svg",
+  "access": "proxy",
+  "url": "http://prometheus:9090",
+  "user": "",
+  "database": "",
+  "basicAuth": false,
+  "isDefault": true,
+  "jsonData": {
+    "exemplarTraceIdDestinations": [
+      {
+        "datasourceUid": "f30c97cf-42c0-4c2c-866c-6a0f408c8b68",
+        "name": "trace_id"
+      }
+    ],
+    "httpMethod": "POST"
+  },
+  "readOnly": false
+}
