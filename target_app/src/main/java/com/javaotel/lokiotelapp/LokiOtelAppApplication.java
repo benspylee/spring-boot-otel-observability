@@ -1,5 +1,6 @@
 package com.javaotel.lokiotelapp;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 import org.apache.http.client.fluent.Request;
