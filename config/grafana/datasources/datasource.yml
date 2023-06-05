@@ -28,6 +28,7 @@ datasources:
         name: trace_id
       httpMethod: POST
     readOnly: false
+    editable: true
   - uid: f30c97cf-42c0-4c2c-866c-6a0f408c8b68
     orgId: 1
     name: Tempo
@@ -49,6 +50,7 @@ datasources:
         - key: compose_service
           value: job
     readOnly: false
+    editable: true
   - uid: c616c72d-2923-44ee-a6cc-f001dc9416f1
     orgId: 1
     name: Loki
@@ -68,6 +70,7 @@ datasources:
         name: TraceID
         url: $${__value.raw}
     readOnly: false
+    editable: true
   - uid: c41fbd6d-792c-4968-8694-70222febcc5c
     orgId: 1
     name: Alertmanager
@@ -82,4 +85,5 @@ datasources:
     isDefault: false
     jsonData:
       implementation: prometheus
-    readOnly: false  
+    readOnly: false 
+    editable: true 
